@@ -12,7 +12,7 @@ def on_message(message, data):
 # -------- Frida Script --------
 script_code = r"""
 // -------- Symbol-based Hook --------
-var symbol_addr = Module.findExportByName("target.dll", "func");
+var symbol_addr = Module.getExportByName("target.dll", "func");
 if (symbol_addr !== null) {
     Interceptor.attach(symbol_addr, {
         onEnter: function(args) {
@@ -28,7 +28,7 @@ if (symbol_addr !== null) {
 
 // -------- Offset-based Hook --------
 // 예: target.dll + 0x1234 (offset은 16진수로 전달 가능)
-var base = Module.findBaseAddress("target.dll");
+var base = Process.getModuleByName("target.dll").base;
 if (base !== null) {
     var offset = 0x1234;  // 여기에 원하는 오프셋 입력
     var target_addr = base.add(offset);
