@@ -15,7 +15,7 @@ func_name = "EZPDF_SetUnDrmEventHandler"
 # -------- Frida Script --------
 script_code = rf"""
 // -------- Symbol-based Hook --------
-var symbol_addr = Process.getModuleByName({dll_name}).getExportByName({func_name});
+var symbol_addr = Process.getModuleByName("{dll_name}").getExportByName("{func_name}");
 if (symbol_addr !== null) {{
     Interceptor.attach(symbol_addr, {{
         onEnter: function(args) {{
