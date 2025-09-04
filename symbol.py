@@ -9,22 +9,25 @@ def on_message(message, data):
     elif message['type'] == 'error':
         print(f"[!] Error: {message['stack']}")
 
+dll_name = "ezPDFBookLib.dll"
+func_name = "EZPDF_SetUnDrmEventHandler"
+
 # -------- Frida Script --------
-script_code = r"""
+script_code = rf"""
 // -------- Symbol-based Hook --------
-var symbol_addr = Process.getModuleByName('ezPDFBookLib.dll').getExportByName('EZPDF_SetUnDrmEventHandler');
-if (symbol_addr !== null) {
-    Interceptor.attach(symbol_addr, {
-        onEnter: function(args) {
+var symbol_addr = Process.getModuleByName({dll_name}).getExportByName({func_name});
+if (symbol_addr !== null) {{
+    Interceptor.attach(symbol_addr, {{
+        onEnter: function(args) {{
             send("[symbol] onEnter called");
-        },
-        onLeave: function(retval) {
+        }},
+        onLeave: function(retval) {{
             send("[symbol] onLeave called, retval: " + retval);
-        }
-    });
-} else {
+        }}
+    }});
+}} else {{
     send("[symbol] func not found in target.dll");
-}
+}}
 """
 
 # attach and load
